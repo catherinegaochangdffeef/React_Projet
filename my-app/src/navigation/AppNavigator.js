@@ -12,8 +12,8 @@ const Tab = createBottomTabNavigator();
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home">
-        <Tab.Screen name="HealthGoal" component={HealthGoalScreen} />
+      <Tab.Navigator initialRouteName="HealthGoal">
+        <Tab.Screen name="HealthGoal" component={HealthGoalScreen} options={{ title: 'My home' }}/>
         <Tab.Screen name="FoodDataBase" component={FoodDataBaseScreen} />
         <Tab.Screen name="MealPlanning" component={MealPlanningScreen} />
       </Tab.Navigator>
