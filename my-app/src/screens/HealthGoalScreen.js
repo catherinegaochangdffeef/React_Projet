@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { View, Text, Alert, StyleSheet, ScrollView } from 'react-native';
 
 function HealthGoalScreen({ navigation }) {
-    const [age, setAge] = useState(20);
+    const [age, setAge] = useState(0);
     const [gender, setGender] = useState('female');
-    const [height, setHeight] = useState('');
-    const [weight, setWeight] = useState('');
+    const [height, setHeight] = useState(0);
+    const [weight, setWeight] = useState(0);
     const [activityLevel, setActivityLevel] = useState('sedentary');
     const [healthGoal, setHealthGoal] = useState('weightLoss');
     const [bMR, setBMR] = useState(0);
@@ -54,8 +54,6 @@ function HealthGoalScreen({ navigation }) {
             Alert.alert('Error', 'Please fill in all fields.');
             return;
         }
-        // TODO: Implement logic to save the user's health goals
-        console.log(age, gender, height, weight, activityLevel, healthGoal);
         calculateBMR();
     };
 
@@ -71,7 +69,7 @@ function HealthGoalScreen({ navigation }) {
                     variant="outlined"
                     label="Age"
                     style={{ margin: 16 }}
-                    value={age}
+                    value={age.toString()}
                     onChangeText={(newAge) => setAge(newAge)}
                     keyboardType="numeric"
                 />
@@ -101,7 +99,7 @@ function HealthGoalScreen({ navigation }) {
                     variant="outlined"
                     label="Height (cm)"
                     style={{ margin: 16 }}
-                    value={height}
+                    value={height.toString()}
                     onChangeText={setHeight}
                     keyboardType="numeric"
                 />
@@ -110,7 +108,7 @@ function HealthGoalScreen({ navigation }) {
                     variant="outlined"
                     label="Weight (kg)"
                     style={{ margin: 16 }}
-                    value={weight}
+                    value={weight.toString()}
                     onChangeText={setWeight}
                     keyboardType="numeric"
                 />
