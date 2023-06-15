@@ -1,15 +1,53 @@
+import { HStack, Button, TextInput } from '@react-native-material/core';
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
 import { View, Text, Alert, StyleSheet, ScrollView } from 'react-native';
-import { HStack, Button, TextInput } from '@react-native-material/core';
 
 function HealthGoalScreen({ navigation }) {
     const [age, setAge] = useState(20);
     const [gender, setGender] = useState('female');
     const [height, setHeight] = useState('');
     const [weight, setWeight] = useState('');
-    const [activityLevel, setActivityLevel] = useState('');
-    const [healthGoal, setHealthGoal] = useState('');
+    const [activityLevel, setActivityLevel] = useState('sedentary');
+    const [healthGoal, setHealthGoal] = useState('weightLoss');
+    const [bMR, setBMR] = useState(0);
+
+    const calculateBMR = () => {
+        let calcul1;
+
+        //Step 3: Calculating BMR Using the Harris-Benedict Equation
+        if (gender === 'male') {
+            calcul1 = 88.362 + 13.397 * weight + 4.799 * height - 5.6777 * age;
+        } else {
+            calcul1 = 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
+        }
+
+        //Step 4: Adjusting BMR Based on Activity Level
+        let calcul2;
+        switch (activityLevel) {
+            case 'sedentary':
+                calcul2 = calcul1 * 1.2;
+                break;
+            case 'lightExercise':
+                calcul2 = calcul1 * 1.375;
+                break;
+            case 'moderateExercise':
+                calcul2 = calcul1 * 1.55;
+                break;
+            case 'heavyExercise':
+                calcul2 = calcul1 * 1.725;
+                break;
+            case 'extraActive':
+                calcul2 = calcul1 * 1.9;
+                break;
+        }
+        // Step 5: Adjusting Caloric Intake Based on Health Goal
+        if (healthGoal === 'weightLoss') {
+            setBMR(calcul2 * 0.9);
+        } else if (healthGoal === 'weightGain') {
+            setBMR(calcul2 * 1.1);
+        } else setBMR(calcul2);
+    };
 
     const handleSave = () => {
         if (!age || !gender || !height || !weight || !activityLevel || !healthGoal) {
@@ -17,34 +55,42 @@ function HealthGoalScreen({ navigation }) {
             return;
         }
         // TODO: Implement logic to save the user's health goals
-
-        // Reset the form
-        setAge('');
-        setGender('');
-        setHeight('');
-        setWeight('');
-        setActivityLevel('');
-        setHealthGoal('');
+        console.log(age, gender, height, weight, activityLevel, healthGoal);
+        calculateBMR();
     };
 
     return (
         <View style={styles.container}>
             <ScrollView style={{ backgroundColor: '#b8e994' }}>
                 {/* age */}
+                {bMR !== 0 && (
+                    <Text style={styles.titre}>Daily caloric intake: {Math.round(bMR)}</Text>
+                )}
 
                 <TextInput
                     variant="outlined"
                     label="Age"
                     style={{ margin: 16 }}
                     value={age}
-                    onChangeText={setAge}
+                    onChangeText={(newAge) => setAge(newAge)}
                     keyboardType="numeric"
                 />
                 {/* gender */}
                 <Text style={styles.titre}>Gender</Text>
                 <HStack center>
-                    <Button title="Female" color="#38ada9" tintColor="white" />
-                    <Button title="Male" color="#38ada9" tintColor="white" />
+                    <Button
+                        title="Female"
+                        tintColor={gender === 'female' ? 'white' : 'black'}
+                        onPress={() => setGender('female')}
+                        color={gender === 'female' ? '#38ada9' : 'white'}
+                        style={{ color: gender === 'female' ? '#38ada9' : '#F00' }}
+                    />
+                    <Button
+                        title="Male"
+                        color={gender === 'male' ? '#38ada9' : 'white'}
+                        tintColor={gender === 'male' ? 'white' : 'black'}
+                        onPress={() => setGender('male')}
+                    />
                 </HStack>
                 {/* <Picker style={styles.picker} selectedValue={gender} onValueChange={setGender}>
                 <Picker.Item label="Male" value="male" />
@@ -53,7 +99,7 @@ function HealthGoalScreen({ navigation }) {
                 {/* Height and weight */}
                 <TextInput
                     variant="outlined"
-                    label="Height"
+                    label="Height (cm)"
                     style={{ margin: 16 }}
                     value={height}
                     onChangeText={setHeight}
@@ -62,7 +108,7 @@ function HealthGoalScreen({ navigation }) {
 
                 <TextInput
                     variant="outlined"
-                    label="Weight"
+                    label="Weight (kg)"
                     style={{ margin: 16 }}
                     value={weight}
                     onChangeText={setWeight}
@@ -74,7 +120,7 @@ function HealthGoalScreen({ navigation }) {
                 <Picker
                     style={styles.picker}
                     selectedValue={activityLevel}
-                    onValueChange={{ setActivityLevel }}
+                    onValueChange={(newActivityLevel) => setActivityLevel(newActivityLevel)}
                 >
                     <Picker.Item label="Sedentary" value="sedentary" />
                     <Picker.Item label="Light Exercise" value="lightExercise" />
@@ -88,7 +134,7 @@ function HealthGoalScreen({ navigation }) {
                 <Picker
                     style={styles.picker}
                     selectedValue={healthGoal}
-                    onValueChange={setHealthGoal}
+                    onValueChange={(newHealthGoal) => setHealthGoal(newHealthGoal)}
                 >
                     <Picker.Item label="Weight Loss" value="weightLoss" />
                     <Picker.Item label="Weight Maintenance" value="weightMaintenance" />
