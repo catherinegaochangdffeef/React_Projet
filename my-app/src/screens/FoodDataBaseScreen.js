@@ -20,6 +20,7 @@ function FoodDataBaseScreen({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedMealType, setSelectedMealType] = useState('Breakfast');
     const [quantity, setQuantity] = useState('');
+    const [SelectedDay, setSelectedDay] = useState('Monday');
 
     const fetchFoodData = async () => {
         const apiKey = 'b2201f576c67507706164522d88c9bc6';
@@ -115,6 +116,19 @@ function FoodDataBaseScreen({ navigation }) {
                                 <Picker.Item label="Lunch" value="Lunch" />
                                 <Picker.Item label="Snack" value="Snack" />
                                 <Picker.Item label="Dinner" value="Dinner" />
+                            </Picker>
+                            <Picker
+                                selectedValue={selectedMealType}
+                                onValueChange={(value) => setSelectedDay(value)}
+                                style={{ marginBottom: 20 }}
+                            >
+                                <Picker.Item label="Monday" value="Monday" />
+                                <Picker.Item label="Tuesday" value="Tuesday" />
+                                <Picker.Item label="Wednesday" value="Wednesday" />
+                                <Picker.Item label="Thursday" value="Thursday" />
+                                <Picker.Item label="Friday" value="Friday" />
+                                <Picker.Item label="Saturday" value="Saturday" />
+                                <Picker.Item label="Sunday" value="Sunday" />
                             </Picker>
                             <TextInput
                                 placeholder="Quantity"
