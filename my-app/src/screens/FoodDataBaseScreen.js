@@ -2,7 +2,16 @@ import { Button, TextInput } from '@react-native-material/core';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, FlatList, Modal, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    Alert,
+    TouchableOpacity,
+    FlatList,
+    Modal,
+    StyleSheet,
+    Keyboard,
+} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
 function FoodDataBaseScreen({ navigation }) {
@@ -64,6 +73,7 @@ function FoodDataBaseScreen({ navigation }) {
         updatedMealPlan.Day[selectedMealType].push({
             food: selectedFood,
             quantity,
+            SelectedDay,
         });
 
         setMealPlan(updatedMealPlan);
@@ -84,6 +94,10 @@ function FoodDataBaseScreen({ navigation }) {
             </TouchableOpacity>
         </View>
     );
+    const handleQuantityChange = (text) => {
+        setQuantity(text);
+        Keyboard.dismiss();
+    };
 
     return (
         <View>
@@ -118,7 +132,7 @@ function FoodDataBaseScreen({ navigation }) {
                                 <Picker.Item label="Dinner" value="Dinner" />
                             </Picker>
                             <Picker
-                                selectedValue={selectedMealType}
+                                selectedValue={SelectedDay}
                                 onValueChange={(value) => setSelectedDay(value)}
                                 style={{ marginBottom: 20 }}
                             >
@@ -131,12 +145,14 @@ function FoodDataBaseScreen({ navigation }) {
                                 <Picker.Item label="Sunday" value="Sunday" />
                             </Picker>
                             <TextInput
-                                placeholder="Quantity"
-                                onChangeText={(text) => setQuantity(text)}
+                                variant="outlined"
+                                label="Quantity"
                                 value={quantity}
+                                onChangeText={handleQuantityChange}
                                 keyboardType="numeric"
                                 style={{ marginBottom: 20 }}
                             />
+
                             <Button
                                 title="Add to Meal Plan"
                                 onPress={handleAddToMealPlan}
