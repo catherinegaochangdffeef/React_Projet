@@ -31,7 +31,13 @@ const AppNavigator = () => {
                 </Tab.Screen>
 
                 <Tab.Screen name="MealPlanning">
-                    {(props) => <MealPlanningScreen {...props} mealPlan={mealPlan} />}
+                    {(props) => (
+                        <MealPlanningScreen
+                            {...props}
+                            mealPlan={mealPlan}
+                            setMealPlan={setMealPlan}
+                        />
+                    )}
                 </Tab.Screen>
             </Tab.Navigator>
         </NavigationContainer>
