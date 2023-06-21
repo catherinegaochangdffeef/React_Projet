@@ -72,7 +72,7 @@ const DisplayInfo = ({ mealPlan, selectedDay, onRemoveFood }) => {
                 onRemoveFood={onRemoveFood}
             />
 
-            <Text>Total Calories: {totalCalories}</Text>
+            <Text>Total Calories: {Math.round(totalCalories)}</Text>
         </View>
     );
 };
