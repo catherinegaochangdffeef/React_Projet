@@ -2,8 +2,61 @@ import React, { useState } from 'react';
 import { Button, View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Text } from '@react-native-material/core';
 
+const MealComponent = ({ mealName, foodItems }) => {
+    console.log(mealName, foodItems);
+    return (
+        <View>
+            <Text>{mealName}</Text>
+            {foodItems.map((foodItem, index) => (
+                <View key={index}>
+                    <Text>{foodItem.food.label}</Text>
+                </View>
+            ))}
+        </View>
+    );
+};
+//  <Text>Quantity: {foodItem.quantity}</Text>
+const DisplayInfo = ({ mealPlan, selectedDay }) => {
+    const calculateTotalCalories = (foodItems) => {
+        let totalCalories = 0;
+        foodItems.forEach((item) => {
+            totalCalories += item.food.nutrients.ENERC_KCAL * item.quantity;
+        });
+        return totalCalories;
+    };
+    const breakfastItems = mealPlan.Day.Breakfast.filter(
+        (item) => item.SelectedDay === selectedDay
+    );
+    const lunchItems = mealPlan.Day.Lunch.filter((item) => item.SelectedDay === selectedDay);
+    const snackItems = mealPlan.Day.Snack.filter((item) => item.SelectedDay === selectedDay);
+    const dinnerItems = mealPlan.Day.Dinner.filter((item) => item.SelectedDay === selectedDay);
+
+    const totalCalories =
+        calculateTotalCalories(breakfastItems) +
+        calculateTotalCalories(lunchItems) +
+        calculateTotalCalories(snackItems) +
+        calculateTotalCalories(dinnerItems);
+
+    return (
+        <View>
+            <MealComponent
+                mealName="Breakfast"
+                foodItems={breakfastItems}
+                selectedMealType="Breakfast"
+            />
+            <MealComponent mealName="Lunch" foodItems={lunchItems} selectedMealType="Lunch" />
+            <MealComponent mealName="Snack" foodItems={snackItems} selectedMealType="Snack" />
+            <MealComponent mealName="Dinner" foodItems={dinnerItems} selectedMealType="Dinner" />
+
+            <Text>Total Calories: {totalCalories}</Text>
+        </View>
+    );
+};
+
 const MealPlanningScreen = ({ mealPlan }) => {
     console.log(mealPlan);
+    const [selectedDay, setSelectedDay] = useState('');
+
     const [fold, setFold] = useState({
         Monday: false,
         Tuesday: false,
@@ -14,118 +67,74 @@ const MealPlanningScreen = ({ mealPlan }) => {
         Sunday: false,
     });
 
-    const inverseFold = (day) => {
-        setFold((prevFold) => ({
-            ...prevFold,
-            [day]: !prevFold[day],
-        }));
+    const handleTouchedDay = (day) => {
+        setFold((prevFold) => {
+            const updateFold = {};
+            Object.keys(prevFold).forEach((key) => {
+                updateFold[key] = key === day;
+            });
+            return updateFold;
+        });
+        setSelectedDay(day);
     };
-
     return (
         <View>
             <ScrollView style={{ backgroundColor: '#b8e994' }}>
-                <TouchableOpacity onPress={() => inverseFold('Monday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Monday')}>
                     <Text variant="h4" style={styles.titre}>
                         Monday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Monday'] && (
-                    <View>
-                        <Text>Breakfast</Text>
-                        <Text>Lunch</Text>
-                        <Text>Dinner</Text>
-                        <Text>Snack</Text>
-                    </View>
-                )}
+                {fold['Monday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Tuesday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Tuesday')}>
                     <Text variant="h4" style={styles.titre}>
                         Tuesday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Tuesday'] && (
-                    <View>
-                        <Text>Breakfast</Text>
-                        <Text>Lunch</Text>
-                        <Text>Dinner</Text>
-                        <Text>Snack</Text>
-                    </View>
-                )}
+                {fold['Tuesday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Wednesday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Wednesday')}>
                     <Text variant="h4" style={styles.titre}>
                         Wednesday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Wednesday'] && (
-                    <View>
-                        <Text>Breakfast</Text>
-                        <Text>Lunch</Text>
-                        <Text>Dinner</Text>
-                        <Text>Snack</Text>
-                    </View>
-                )}
+                {fold['Wednesday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Thursday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Thursday')}>
                     <Text variant="h4" style={styles.titre}>
                         Thursday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Thursday'] && (
-                    <View>
-                        <Text>Breakfast</Text>
-                        <Text>Lunch</Text>
-                        <Text>Dinner</Text>
-                        <Text>Snack</Text>
-                    </View>
-                )}
+                {fold['Thursday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Friday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Friday')}>
                     <Text variant="h4" style={styles.titre}>
                         Friday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Friday'] && (
-                    <View>
-                        <Text>Breakfast</Text>
-                        <Text>Lunch</Text>
-                        <Text>Dinner</Text>
-                        <Text>Snack</Text>
-                    </View>
-                )}
+                {fold['Friday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Saturday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Saturday')}>
                     <Text variant="h4" style={styles.titre}>
                         Saturday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Saturday'] && (
-                    <View>
-                        <Text>Monday</Text>
-                        <Text>Lunch: Food item 1</Text>
-                        <Text>Dinner: Food item 2</Text>
-                    </View>
-                )}
+                {fold['Saturday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
 
-                <TouchableOpacity onPress={() => inverseFold('Sunday')}>
+                <TouchableOpacity onPress={() => handleTouchedDay('Sunday')}>
                     <Text variant="h4" style={styles.titre}>
                         Sunday
                     </Text>
                 </TouchableOpacity>
 
-                {fold['Sunday'] && (
-                    <View>
-                        <Text>Monday</Text>
-                        <Text>Lunch: Food item 1</Text>
-                        <Text>Dinner: Food item 2</Text>
-                    </View>
-                )}
+                {fold['Sunday'] && <DisplayInfo mealPlan={mealPlan} selectedDay={selectedDay} />}
             </ScrollView>
         </View>
     );
