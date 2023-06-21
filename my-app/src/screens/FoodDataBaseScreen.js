@@ -14,18 +14,11 @@ import {
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
-function FoodDataBaseScreen({ navigation }) {
+const FoodDataBaseScreen = ({ mealPlan, setMealPlan }) => {
     const [search, setSearch] = useState('');
     const [foodData, setFoodData] = useState([]);
     const [selectedFood, setSelectedFood] = useState(null);
-    const [mealPlan, setMealPlan] = useState({
-        Day: {
-            Breakfast: [],
-            Lunch: [],
-            Snack: [],
-            Dinner: [],
-        },
-    });
+
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedMealType, setSelectedMealType] = useState('Breakfast');
     const [quantity, setQuantity] = useState('');
@@ -68,7 +61,6 @@ function FoodDataBaseScreen({ navigation }) {
             Alert.alert('Please select a food item and specify the quantity.');
             return;
         }
-
         const updatedMealPlan = { ...mealPlan };
         updatedMealPlan.Day[selectedMealType].push({
             food: selectedFood,
@@ -165,7 +157,7 @@ function FoodDataBaseScreen({ navigation }) {
             )}
         </View>
     );
-}
+};
 
 export default FoodDataBaseScreen;
 
