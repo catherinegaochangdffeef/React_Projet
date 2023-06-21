@@ -11,6 +11,7 @@ Calories Counter and Meal Planner application using React Native and Expo. This 
   - npm install @react-native-material/core
   - npm install @react-native-picker/picker
   - npm install @rneui/themed @rneui/base
+  - npx expo install @react-native-async-storage/async-storage@1.17.11
 5. and run the command "npx expo start'
 
 # How to use it 
